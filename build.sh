@@ -2,7 +2,8 @@
 # Builds aacdec.wasm: the decoder of the Fraunhofer FDK AAC Codec Library for
 # Android, and nothing of its encoder, as a WebAssembly reactor module.
 #
-# Needs clang with a wasm32 backend, wasm-ld, and the WASI sysroot plus the
+# Needs zstd, which compresses the module, and clang with a wasm32
+# backend, wasm-ld, and the WASI sysroot plus the
 # wasm32 compiler-rt builtins from https://github.com/WebAssembly/wasi-sdk
 # (its "wasi-sysroot" and "libclang_rt" release assets are enough).
 # fdk-aac's sources (v2.0.3) are the fdk-aac submodule:
@@ -46,4 +47,11 @@ sources=$(awk '
 	$includes $sources "$here/aacshim.cpp" \
 	-o "$here/aacdec.wasm"
 
-echo "built $here/aacdec.wasm"
+# komarugram downloads it zstd-compressed at the highest level, two
+# fifths of its size:
+# from the file, not a pipe, so that the frame tells its size and unpacking
+# takes one buffer of it. zstd writes no name or time: the same module gives
+# the same bytes.
+zstd --ultra -22 -q -f "$here/aacdec.wasm" -o "$here/aacdec.wasm.zst"
+
+echo "built $here/aacdec.wasm and $here/aacdec.wasm.zst"

@@ -11,8 +11,9 @@ without FFmpeg.
 | File | What |
 |---|---|
 | `aacdec.wasm` | The module |
+| `aacdec.wasm.zst` | The same module, zstd-compressed (`zstd --ultra -22`): what komarugram downloads |
 | `aacshim.cpp` | The only surface the host can call: configure with an AudioSpecificConfig, decode raw access units, read back 16-bit samples |
-| `build.sh` | How `aacdec.wasm` is built |
+| `build.sh` | How `aacdec.wasm` and `aacdec.wasm.zst` are built |
 | `fdk-aac` | fdk-aac's sources, tag `v2.0.3`, as a git submodule of https://github.com/mstorsjo/fdk-aac, unmodified |
 
 ## Building
